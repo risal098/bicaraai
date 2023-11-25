@@ -32,7 +32,7 @@ class PersuasiveAd extends StatelessWidget {
               margin: EdgeInsets.only(top: 40),
               child: InkWell(
                 onTap: (){},
-                child: SvgPicture.asset("asset/images/cross-2.svg", width: 35, colorFilter: ColorFilter.mode(Colors.white.withOpacity(0.5), BlendMode.srcIn),)),
+                child: SvgPicture.asset("assets/images/cross-2.svg", width: 35, colorFilter: ColorFilter.mode(Colors.white.withOpacity(0.5), BlendMode.srcIn),)),
             ),
           ),
           Column(
@@ -46,7 +46,7 @@ class PersuasiveAd extends StatelessWidget {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                     color: Colors.white),
-                child: Image.asset("asset/images/logomark.png"),
+                child: Image.asset("assets/images/logomark.png"),
               ),
               SizedBox(
                 height: 10,
@@ -127,7 +127,7 @@ class PersuasiveAd extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         SvgPicture.asset(
-          "asset/images/check-fill.svg",
+          "assets/images/check-fill.svg",
           width: 35,
         ),
         SizedBox(
