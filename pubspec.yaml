@@ -87,6 +87,9 @@ flutter:
     - assets/images/logo_1.png
     - assets/images/flat-color-icons_google.png
     - assets/images/vector_3.png
+    - assets/images/logomark.png
+    - assets/images/check-fill.svg
+    - assets/images/cross-2.svg
   fonts: 
     - family: Poppins
       fonts: 
