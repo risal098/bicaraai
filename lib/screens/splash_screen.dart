@@ -22,7 +22,7 @@ class _SplashSCreenState extends State<SplashSCreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset("asset/images/logomark.png", width: 100,),
+            Image.asset("assets/images/logomark.png", width: 100,),
             SizedBox(height: 10,),
             Text("TOBA APP", style: TextStyle(color: const Color(0xff528DE7), fontSize: 30,
             fontWeight: FontWeight.bold
