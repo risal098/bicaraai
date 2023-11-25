@@ -1,9 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../screens/song_ans_page.dart';
-Widget SongCard(String imageLink, String songName, String singer) {
+import '../widgets/songlevel.dart';
+import '../controllers/startSongQuiz.dart';
+import '../controllers/songSectionData.dart';
+import '../screens/songsection.dart';
+Widget SongCard(String imageLink, String songName, String singer,String getTitle, BuildContext context) {
+    void showLoadingDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(height: 10),
+              Text("Loading..."),
+            ],
+          ),
+        );
+      },
+    );
+  }
   return InkWell(
-    onTap: () {Get.off(SongAns());},child:
+    onTap: () async{
+      showLoadingDialog(context);
+      String difficulty = Level.level;
+      if(SongSectionData.audioType=="Ielts"){difficulty="ielts"+difficulty;}
+     int stats=0; await StartSong.getBlobData(getTitle,difficulty,songName,singer,imageLink).timeout(
+                                          const Duration(seconds: 29),
+                      onTimeout: (){
+
+                                          return stats=-1;});
+        if(stats==-1){
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){return SongSection();}));
+        }
+      else{Navigator.pop(context);
+      Get.off(SongAns());}
+      
+      }
+      ,child:
   Card(
     elevation: 5,
     margin: EdgeInsets.only(bottom: 10),
@@ -18,9 +56,10 @@ Widget SongCard(String imageLink, String songName, String singer) {
           children: [
             CircleAvatar(
               radius: 25,
-              backgroundImage: NetworkImage(imageLink),
+              backgroundImage:  NetworkImage(imageLink)
+          
             ),
-            const SizedBox(
+            SizedBox(
               width: 10,
             ),
             Column(
@@ -28,7 +67,7 @@ Widget SongCard(String imageLink, String songName, String singer) {
               children: [
                 Text(
                   songName,
-                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                  style:  TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                 ),
                 Text(singer),
               ],

@@ -1,4 +1,4 @@
-import 'package:bicaraai/bar_items/individualbar.dart';
+import '../bar_items/individualbar.dart';
 
 class BarData {
   final double sun;

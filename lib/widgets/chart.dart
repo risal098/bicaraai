@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:bicaraai/bar_items/bardata.dart';
+import '../bar_items/bardata.dart';
 
 class MyBarData extends StatelessWidget {
   final List weeklySum;

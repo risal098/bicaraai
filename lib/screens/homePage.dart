@@ -7,6 +7,9 @@ import 'package:auto_size_text/auto_size_text.dart';
 import './lead_page.dart';
 import './progress.dart';
 import './songsection.dart';
+import '../controllers/songSectionData.dart';
+import '../widgets/songlevel.dart';
+import '../controllers/leaderboardData.dart';
 class HomePage extends StatefulWidget{
   HomePage({super.key});
 
@@ -22,7 +25,8 @@ void _onItemTapped(int index) {
    // setState(() {
    
     if(index==1){
-    Get.off(()=>LeadPage()) ;
+      LeaderboardData.getData()!.whenComplete(() {print("lanjut"); Get.off(()=>LeadPage()) ;});
+    
     }
     else if(index==2){
       Get.off(()=>AccountPage());
@@ -122,7 +126,7 @@ void _onItemTapped(int index) {
         ),SizedBox(
               height: 7,
               
-             ),songContainer(),SizedBox(
+             ),songContainer(context),SizedBox(
               height: 7,
               
              ),ieltContainer()
@@ -159,14 +163,46 @@ void _onItemTapped(int index) {
     )),
     );
   }
-Widget songContainer(){
+  void showLoadingDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(height: 10),
+              Text("Loading..."),
+            ],
+          ),
+        );
+      },
+    );
+  }
+Widget songContainer(BuildContext context){
   String title ="Guess The Lyrics";
   String text="Choose song that you want and improve your listening skill in fun way!";
-  return InkWell(onTap:(){Get.to(()=>SongSection());},
+  return InkWell(onTap:() async{
+    print("lets 1");
+    showLoadingDialog(context);
+    print("lets 2");
+    try{
+      int statcode=await SongSectionData.storeApi() ;
+      if(statcode==200){print("lets 3");
+    Navigator.pop(context);
+    print("lets 4");
+    Level.level="Easy";
+    Get.to(()=>SongSection());}else{
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){return HomePage();}));
+    }
+    }catch(e){print(e);print("connection error");Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){return HomePage();}));
+    }},
   child:Container(
     padding: EdgeInsets.all(10) ,
     decoration: BoxDecoration(
-            border: Border.all(color: Color.fromARGB(255, 85, 199, 201)),
+            border: Border.all(color: Color.fromARGB(255, 158, 217, 218)),
             borderRadius: BorderRadius.circular(15),
             gradient: LinearGradient(
                         begin: Alignment(1, 0.1),
@@ -220,7 +256,21 @@ Widget songContainer(){
 Widget ieltContainer(){
   String title ="Get Ready For IELTS";
   String text="prepare yourself for IELTS with various audio options!";
-  return InkWell(onTap:(){},
+  return InkWell(onTap:()async{
+    print("lets 1");
+    showLoadingDialog(context);
+    print("lets 2");
+    try{
+      int statcode=await SongSectionData.storeApiIelts() ;
+      if(statcode==200){print("lets 3");
+    Navigator.pop(context);
+    print("lets 4");
+    Level.level="Easy";
+    Get.to(()=>SongSection());}else{
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){return HomePage();}));
+    }
+    }catch(e){print(e);print("connection error");Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){return HomePage();}));
+    }},
   child:Container(
     padding: EdgeInsets.all(10) ,
     decoration: BoxDecoration(

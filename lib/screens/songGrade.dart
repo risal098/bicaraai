@@ -1,12 +1,12 @@
-import 'package:bicaraai/screens/homePage.dart';
+import '../screens/homePage.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 import 'package:get/get.dart';
 import "./accountPage.dart";
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-
-
+import '../controllers/songPoint.dart';
+import '../controllers/startSongQuiz.dart';
 class SongGrade extends StatefulWidget{
   SongGrade({super.key});
 
@@ -87,7 +87,7 @@ void tes(){
   Get.offAll(HomePage());
 }
 
-double progres=0.75;
+double progres=PointData.percentage!;
 String result="Great Job!";
 
 @override
@@ -130,7 +130,7 @@ Widget build(BuildContext context){
                 lineWidth: 8.0,
                 percent: progres, // Adjust the percentage as needed
                 center:
-                 Text("${progres*100}%",style: TextStyle(fontSize: 40,fontFamily: 
+                 Text("${(progres*100).round()}%",style: TextStyle(fontSize: 40,fontFamily: 
                 "Poppins",fontWeight: FontWeight.w600,color: Color(0xFF527EE7)),),
 
                 progressColor: Color(0xFF527EE7),
@@ -197,20 +197,34 @@ Widget build(BuildContext context){
       )
       );
 }
-
+Color chooseByPoint(double? based){
+  if(based! >=0.8){
+    return Colors.green;
+  }else if(based! <0.8 && based! >=0.4){
+    return Colors.orange;
+  }
+  else if(based < 0.4 && based! >= 0.1){
+    return Colors.red;
+  }else{
+    return Color.fromARGB(255, 31, 4, 2);
+  }
+}
 
 Widget userAnswer(){
   return ListView(
           children: [
-            Text("lorem ipsumf fejndkawdjkhawkdkawhdawdoiawjdo d kefefjoef fejndkawdjkhawkdkawhdawdoiawjdo diowajdoiawjdjawdijawo djawodjoiajdawjfoejf lorem ipsumf kefefjoef fejndkawdjkhawkdkawhdawdoiawjdo diowajdoiawjdjawdijawo djawodjoiajdawjfoejf"),
-            AutoSizeText("halo lorem ipsumf kefefjoef fejndkawdjkhawkdkawhdawdoiawjdo diowajdoiawjdjawdijawo djawodjoiajdawjfoejf lorem ipsumf kefefjoef fejndkawdjkhawkdkawhdawdoiawjdo diowajdoiawjdjawdijawo djawodjoiajdawjfoejf"
-            ,maxLines:6),// Add your content here, such as other containers and images
-            Container(
-              // Your content container 1
-            ),
-            Container(
-              // Your content container 2
-            ),
+            Text("ANSWER 1"),
+            AutoSizeText
+            (StartSong.userLyric1!,style:TextStyle(color:chooseByPoint(PointData.answerPoint1))
+            ,maxLines:6),
+            Text("ANSWER 2"),
+            AutoSizeText
+            (StartSong.userLyric2!,style:TextStyle(color:chooseByPoint(PointData.answerPoint2))
+            ,maxLines:6),
+            Text("ANSWER 3"),
+            AutoSizeText
+            (StartSong.userLyric3!,style:TextStyle(color:chooseByPoint(PointData.answerPoint3))
+            ,maxLines:6),
             
             // Add more content as needed
           ],
@@ -219,15 +233,15 @@ Widget userAnswer(){
 Widget rightAnswer(){
   return ListView(
           children: [
-            Text("llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll"),
-            AutoSizeText("halo lorem ipsumf kefefjoef fejndkawdjkhawkdkawhdawdoiawjdo diowajdoiawjdjawdijawo djawodjoiajdawjfoejf lorem ipsumf kefefjoef fejndkawdjkhawkdkawhdawdoiawjdo diowajdoiawjdjawdijawo djawodjoiajdawjfoejf"
+            Text("ANSWER 1"),
+            AutoSizeText(StartSong.lyric1!,style:TextStyle(color:Colors.black)
             ,maxLines:6),// Add your content here, such as other containers and images
-            Container(
-              // Your content container 1
-            ),
-            Container(
-              // Your content container 2
-            ),
+            Text("ANSWER 2"),
+            AutoSizeText(StartSong.lyric2!,style:TextStyle(color:Colors.black)
+            ,maxLines:6),
+            Text("ANSWER 3"),
+            AutoSizeText(StartSong.lyric3!,style:TextStyle(color:Colors.black)
+            ,maxLines:6),
             
             // Add more content as needed
           ],

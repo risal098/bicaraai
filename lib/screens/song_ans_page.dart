@@ -1,7 +1,8 @@
-import 'package:audioplayers/audioplayers.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../screens/song_ans_page2.dart';
+import '../controllers/startSongQuiz.dart';
 class SongAns extends StatefulWidget {
   const SongAns({super.key});
 
@@ -11,25 +12,32 @@ class SongAns extends StatefulWidget {
 
 class _SongAnsState extends State<SongAns> {
   double _initial = 0.3;
-
+  int start=0;
+  int playing=0;
   void updateProgress() {
     setState(() {
      // _initial += 0.35;
     });
   }
+ 
+  String? titleMusic = StartSong.title;
+  String? singer = StartSong.singer;
+  String? albumCover = StartSong.imageLink;
 
-  String titleMusic = "Thinking Out Loud";
-  String singer = "Ed Sheeran";
-  String albumCover = "assets/images/thinking_out_loud.jpeg";
-
-  final player = AudioPlayer();
-
+   AudioPlayer? player = StartSong.player1;
+  
   Future<void> playMusic(String url) async {
-    await player.play(AssetSource(url));
+    print("play");
+    if(playing==0){
+      playing=1;
+      if(start==0){await player!.play();start=1;playing=0;}
+    else{print("replay"); player=await StartSong.getAudio(StartSong.forPlayer1);await player!.play();playing=0;}}
+    else{print("tunggu");}
+    
   }
 
   Future<void> stopMusic() async {
-    await player.stop();
+    await player!.stop();
   }
 
   final userAnswer = TextEditingController();
@@ -90,7 +98,7 @@ class _SongAnsState extends State<SongAns> {
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          titleMusic,
+                          titleMusic!,
                           style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),
@@ -98,7 +106,7 @@ class _SongAnsState extends State<SongAns> {
                     Padding(
                       padding: const EdgeInsets.only(left: 20),
                       child: Align(
-                          alignment: Alignment.centerLeft, child: Text(singer)),
+                          alignment: Alignment.centerLeft, child: Text(singer!)),
                     )
                   ],
                 ),
@@ -121,7 +129,7 @@ class _SongAnsState extends State<SongAns> {
                   children: [
                     CircleAvatar(
                       radius: 20,
-                      backgroundImage: AssetImage(albumCover),
+                      backgroundImage: NetworkImage(albumCover!),
                     ),
                     const Image(
                       image: AssetImage('assets/images/waveform-audio.png'),
@@ -191,6 +199,8 @@ class _SongAnsState extends State<SongAns> {
                   onPressed: () {
                     updateProgress();
                     stopMusic();
+                
+                    StartSong.userLyric1=userAnswer.text;
                     Get.off(SongAns2());
                    // Get.toNamed('/2', arguments: _initial);
                   },

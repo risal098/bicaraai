@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:bicaraai/widgets/achiement.dart';
-import 'package:bicaraai/widgets/chart.dart';
-import 'package:bicaraai/widgets/target.dart';
+import '../widgets/achiement.dart';
+import '../widgets/chart.dart';
+import '../widgets/target.dart';
 
 class ProgressPage extends StatelessWidget {
   const ProgressPage({super.key});

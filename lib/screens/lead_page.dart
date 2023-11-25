@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../widgets/rankbox.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import './homePage.dart';
 import './accountPage.dart';
-class LeadPage extends StatefulWidget {
-  const LeadPage({super.key});
-
-  @override
-  State<LeadPage> createState() => _LeadPageState();
-}
-
-class _LeadPageState extends State<LeadPage> {
-  void _onItemTapped(int index) {
+import '../controllers/leaderboardData.dart';
+class LeadPage extends StatelessWidget {
+  
+   LeadPage({super.key});
+void _onItemTapped(int index) {
    // setState(() {
     if(index==0){
     Get.off(()=>HomePage()) ;
@@ -24,85 +22,93 @@ class _LeadPageState extends State<LeadPage> {
   }
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
-    return DefaultTabController(
-      initialIndex: 0,
-      length: 2,
-      child: Scaffold(
-        body: Container(
-          height: height,
-          color: Colors.indigo,
-          child: Column(
-            children: [
+    var size = MediaQuery.of(context).size;
+    var height = size.height;
+    var width = size.width;
+    return Scaffold(
+      body: Stack(
+        children: [
+          Container(
+            height: height,
+            padding: EdgeInsets.only(top: 30),
+            width: width,
+            decoration: BoxDecoration(
+                gradient: LinearGradient(colors: [
+              Color(0xff0fd3d5),
+              Color(0xff20bcda),
+              Color(0xff32a6df),
+              Color(0xff4292e3),
+              Color(0xff527ee7),
+            ])),
+            child: Column(children: [
+              
+              Image.asset("assets/images/piala.png"),
               SizedBox(
-                height: height * 0.3,
-                child: const Column(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(20, 45, 20, 0),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(15, 20, 15, 0),
-                      child: Column(children: [
-                        Image(
-                          image: AssetImage("assets/images/trophy.png"),
-                          height: 80,
-                        ),
-                        Text(
-                          "Leaderboard",
-                          style: TextStyle(
-                            fontSize: 24,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1,
-                          ),
-                        ),
-                        TabBar(tabs: [
-                          Tab(
-                            text: "This Week",
-                          ),
-                          Tab(
-                            text: "All Time",
-                          )
-                        ])
-                      ]),
-                    )
-                  ],
-                ),
+                height: 5,
               ),
-              Container(
-                height: height * 0.7,
-                padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
-                decoration: const BoxDecoration(
+              Text(
+                "LEADERBOARD",
+                style: TextStyle(
+                    fontSize: 25,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w900),
+              ),
+            ]),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 210),
+            child: Container(
+              height: height,
+              width: width,
+              decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(50),
-                    topRight: Radius.circular(50),
+                      topLeft: Radius.circular(30),
+                      topRight: Radius.circular(30))),
+              child: Padding(
+                padding: EdgeInsets.only(left: 20, right: 20, top: 20),
+                child: Stack(children: [
+                  SingleChildScrollView(
+                    child: Column(children: [
+                      for (int i = 1; i < 21; i++)
+                        (i<21)?RankBox(
+                            rank: i.toString(),
+                            profile:
+                                "https://images.saymedia-content.com/.image/t_share/MTk2NzY3MjA5ODc0MjY5ODI2/top-10-cutest-cat-photos-of-all-time.jpg",
+                            username: LeaderboardData.usernames![i-1],
+                            exp: LeaderboardData.scores![i-1].toString()):SizedBox(height: 80,),
+                            SizedBox(height: 80,)
+                    ]),
                   ),
-                ),
-                child: ListView.builder(
-                  itemCount: 10,
-                  itemBuilder: (context, index) => Container(
-                    margin: const EdgeInsets.only(top: 10, bottom: 10),
-                    height: 60,
-                    decoration: BoxDecoration(
-                        color: Colors.lime,
-                        borderRadius: BorderRadius.circular(15)),
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Text("Rank"),
-                        Text("User Image"),
-                        Text("Username"),
-                        Text("User Score")
-                      ],
-                    ),
-                  ),
-                ),
+                ]),
               ),
-            ],
+            ),
           ),
-        ),bottomNavigationBar: BottomNavigationBar(backgroundColor: Color.fromARGB(255, 255, 255, 255),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15)
+              ),
+              color: Colors.transparent,
+              elevation: 3,
+              child: RankBox(
+                /*
+                LeaderboardData.
+                LeaderboardData.tempdefaultscores
+LeaderboardData.tempdefaultusernames
+  LeaderboardData.tempdefaultuserposition
+                 */
+                  rank: LeaderboardData.tempdefaultuserposition!.toString(),
+                  profile:
+                      "https://images.saymedia-content.com/.image/t_share/MTk2NzY3MjA5ODc0MjY5ODI2/top-10-cutest-cat-photos-of-all-time.jpg",
+                  username: LeaderboardData.tempdefaultusernames!.toString(),
+                  exp:  LeaderboardData.tempdefaultscores!.toString()),
+            ),
+          )
+        ],
+      )
+      ,bottomNavigationBar: BottomNavigationBar(backgroundColor: Color.fromARGB(255, 255, 255, 255),
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -123,7 +129,6 @@ class _LeadPageState extends State<LeadPage> {
         unselectedItemColor: Colors.grey, 
       onTap: _onItemTapped,
     )
-      ),
     );
   }
 }

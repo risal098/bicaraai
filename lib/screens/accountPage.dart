@@ -5,6 +5,7 @@ import './homePage.dart';
 //import './songGrade.dart';
 import './lead_page.dart';
 import './progress.dart';
+import '../controllers/leaderboardData.dart';
 class AccountPage extends StatefulWidget{
   AccountPage({super.key});
 
@@ -18,11 +19,14 @@ MediaQueryData mediaQueryData = MediaQueryData.fromWindow(ui.window);
 
 void _onItemTapped(int index) {
    // setState(() {
+   
     if(index==0){
+      
     Get.off(()=>HomePage()) ;
     }
     else if(index==1){
-      Get.off(()=>LeadPage());
+    //  await LeaderboardData.getData();
+      LeaderboardData.getData()!.whenComplete(() {print("lanjut"); Get.off(()=>LeadPage()) ;});
     }
     
       print(index);// = index;
