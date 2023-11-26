@@ -18,8 +18,6 @@ class ProgressPage extends StatelessWidget {
         width: width,
         child: SingleChildScrollView(
           child: Container(
-            height:
-                (height >= 850) ? height - (height * (56 / 800)) : height+40,
             decoration: const BoxDecoration(
               gradient: LinearGradient(
                   begin: Alignment.topCenter,
