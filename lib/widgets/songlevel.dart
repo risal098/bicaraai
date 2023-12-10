@@ -1,5 +1,7 @@
 
 
+import '../controllers/accountData.dart';
+import '../widgets/card_info.dart';
 import 'package:flutter/material.dart';
 
 class Level{
@@ -15,6 +17,16 @@ class StateSongLevel extends StatefulWidget {
 }
 
 class _StateSongLevelState extends State<StateSongLevel> {
+  void showLoadingDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return FeatureInfo(title: "Difficulity Options", desc: "Improve your skills across different difficulty levels.\n\nExclusive for VIP users!", image: "assets/images/cardInfo_image.svg");
+      },
+    );
+  }
+
   bool status1 = true;
   bool status2 = false;
   bool status3 = false;
@@ -43,7 +55,9 @@ class _StateSongLevelState extends State<StateSongLevel> {
         const SizedBox(width: 5,),
         InkWell(
           onTap: (){
-            setState(() {
+            (AccountData.permissionStatus!=1)
+            ? showLoadingDialog(context)
+            :setState(() {
                 if(status2!=true){
                   Level.level = "Medium";
                   status1 = false;
@@ -57,7 +71,9 @@ class _StateSongLevelState extends State<StateSongLevel> {
         const SizedBox(width: 5,),
         InkWell(
           onTap: (){
-            setState(() {
+            (AccountData.permissionStatus!=1)
+            ? showLoadingDialog(context)
+            : setState(() {
               if(status3!=true){
                   Level.level = "Hard";
                   status1 = false;
@@ -76,19 +92,45 @@ class _StateSongLevelState extends State<StateSongLevel> {
 
   SizedBox LevelBox(double height, double width, bool status, String name) {
     return SizedBox(
-        height: height * 25 / 800,
-        width: width * 62 / 360,
-        child: Container(
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-              color: (status == true)?const Color(0xff528DE7):const Color(0xff528DE7).withOpacity(0.7),
-              borderRadius: BorderRadius.circular(40)),
-          child: Text(
-            name,
-            style: TextStyle(
-              color: (status == true)?Colors.white:Colors.black,
-              fontWeight: (status == true)?FontWeight.bold:FontWeight.normal,
+        height: height * 30 / 800,
+        width: width * 70 / 360,
+        child: (AccountData.permissionStatus!=1 && name != "Easy")
+        ? Stack(
+          children: [
+            Align(
+              alignment: Alignment.bottomLeft,
+              child: levelboxContainer(status, name, height, width),
             ),
+            Align(
+              alignment: Alignment.topRight,
+              child: Icon(Icons.lock_rounded, size: 20, color: Color.fromARGB(255, 0, 0, 0),)
+            )
+          ],
+        )
+        : Stack(
+          children: [
+            Align(
+              alignment: Alignment.bottomLeft,
+              child: levelboxContainer(status, name, height, width),
+            )
+          ],
+        ),
+      );
+  }
+
+  Container levelboxContainer(bool status, String name, var height, var width) {
+    return Container(
+        height: height * 25 / 800,
+        width: width * 65 / 360,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+            color: (status == true)?const Color(0xff528DE7):const Color(0xff528DE7).withOpacity(0.7),
+            borderRadius: BorderRadius.circular(40)),
+        child: Text(
+          name,
+          style: TextStyle(
+            color: (status == true)?Colors.white:Colors.black,
+            fontWeight: (status == true)?FontWeight.bold:FontWeight.normal,
           ),
         ),
       );

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../bar_items/bardata.dart';
-
+import '../controllers/accountData.dart';
 class MyBarData extends StatelessWidget {
   final List weeklySum;
   const MyBarData({super.key, required this.weeklySum});
@@ -11,15 +11,18 @@ class MyBarData extends StatelessWidget {
     var size = MediaQuery.of(context).size;
     var height = size.height;
     var width = size.width;
-
+    var data=AccountData.weeklyStat!;
+    print(data);
+    print(data["Monday"]+1);
     var myBardata = BarData(
-        sun: weeklySum[0],
-        mon: weeklySum[1],
-        tue: weeklySum[2],
-        wed: weeklySum[3],
-        thu: weeklySum[4],
-        fri: weeklySum[5],
-        sat: weeklySum[6]);
+        sun: double.parse(data["Sunday"].toString()),
+        mon: double.parse(data["Monday"].toString()),
+        tue: double.parse(data["Tuesday"].toString()),
+        wed: double.parse(data["Wednesday"].toString()),
+        thu: double.parse(data["Thursday"].toString()),
+        fri: double.parse(data["Friday"].toString()),
+        sat: double.parse(data["Saturday"].toString())
+    );
     myBardata.initilizedBarData();
 
     return BarChart(BarChartData(

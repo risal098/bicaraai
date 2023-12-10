@@ -5,7 +5,8 @@ import '../widgets/chart.dart';
 import '../widgets/target.dart';
 
 class ProgressPage extends StatelessWidget {
-  const ProgressPage({super.key});
+  String pageName = "ProgressPage";
+  ProgressPage({super.key});
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -13,13 +14,12 @@ class ProgressPage extends StatelessWidget {
     var width = size.width;
 
     return Scaffold(
+      backgroundColor: Color(0xffE8E8E8),
       body: SizedBox(
-        height: (height >= 850) ? height - (height * (56 / 800)) : height+40,
+        height: height,
         width: width,
         child: SingleChildScrollView(
           child: Container(
-            height:
-                (height >= 850) ? height - (height * (56 / 800)) : height+40,
             decoration: const BoxDecoration(
               gradient: LinearGradient(
                   begin: Alignment.topCenter,
@@ -111,7 +111,7 @@ class ProgressPage extends StatelessWidget {
                             height: 10,
                           ),
                           Text(
-                            "Spend Time (in minutes)",
+                            "Played Audio",
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.w600),
                           ),

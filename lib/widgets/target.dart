@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
-
+import '../controllers/accountData.dart';
 class TargetCard extends StatefulWidget {
   const TargetCard({super.key});
 
@@ -12,8 +12,8 @@ class _TargetCardState extends State<TargetCard> {
 
   @override
   Widget build(BuildContext context) {
-    String target = (4).toString()+" Hours";
-    String spended = (3).toString()+" Hours";
+    String target = AccountData.weeklyTarget.toString()+" Audio";
+    String spended = AccountData.weeklyProgress.toString()+" Audio";
 
     var size = MediaQuery.of(context).size;
     var height = size.height;
@@ -31,7 +31,7 @@ class _TargetCardState extends State<TargetCard> {
         children: [
           CircularPercentIndicator(
             radius: (height >= 800) ?46:40,
-            percent: 0.75,
+            percent: AccountData.weeklyProgresPercentage!/100,
             circularStrokeCap: CircularStrokeCap.round,
             lineWidth: 12,
             progressColor: Color(0xff528DE7),
@@ -39,10 +39,10 @@ class _TargetCardState extends State<TargetCard> {
             animationDuration: 800,
             animateFromLastPercent: true,
             backgroundColor: Colors.white,
-            center: Text("75%", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Color(0xff528DE7)),),
+            center: Text("${AccountData.weeklyProgresPercentage}%", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Color(0xff528DE7)),),
             ),
           TextTarget("Target", target),
-          TextTarget("Spended Time", spended),
+          TextTarget("Played Audio", spended),
         ],
       ),
     );

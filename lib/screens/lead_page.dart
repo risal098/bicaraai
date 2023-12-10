@@ -6,7 +6,7 @@ import './homePage.dart';
 import './accountPage.dart';
 import '../controllers/leaderboardData.dart';
 class LeadPage extends StatelessWidget {
-  
+   String pageName = "LeadPage";
    LeadPage({super.key});
 void _onItemTapped(int index) {
    // setState(() {
@@ -70,13 +70,14 @@ void _onItemTapped(int index) {
                 child: Stack(children: [
                   SingleChildScrollView(
                     child: Column(children: [
-                      for (int i = 1; i < 21; i++)
-                        (i<21)?RankBox(
+                      for (int i = 1; i < LeaderboardData.lengths+1; i++)
+                       RankBox(
                             rank: i.toString(),
                             profile:
                                 "https://images.saymedia-content.com/.image/t_share/MTk2NzY3MjA5ODc0MjY5ODI2/top-10-cutest-cat-photos-of-all-time.jpg",
+                                
                             username: LeaderboardData.usernames![i-1],
-                            exp: LeaderboardData.scores![i-1].toString()):SizedBox(height: 80,),
+                            exp: LeaderboardData.scores![i-1].toString()),
                             SizedBox(height: 80,)
                     ]),
                   ),

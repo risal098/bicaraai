@@ -10,6 +10,7 @@ class LeadPage extends StatefulWidget {
 }
 
 class _LeadPageState extends State<LeadPage> {
+  String pageName = "LeadPage";
   void _onItemTapped(int index) {
    // setState(() {
     if(index==0){

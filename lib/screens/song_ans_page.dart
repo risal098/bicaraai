@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../screens/song_ans_page2.dart';
 import '../controllers/startSongQuiz.dart';
+import '../controllers/songPoint.dart';
+import '../controllers/songSectionData.dart';
+
 class SongAns extends StatefulWidget {
   const SongAns({super.key});
 
@@ -11,6 +14,25 @@ class SongAns extends StatefulWidget {
 }
 
 class _SongAnsState extends State<SongAns> {
+  void showLoadingDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(height: 10),
+              Text("Loading..."),
+            ],
+          ),
+        );
+      },
+    );
+  }
+  String pageName = "SongAns";
   double _initial = 0.3;
   int start=0;
   int playing=0;
@@ -23,7 +45,7 @@ class _SongAnsState extends State<SongAns> {
   String? titleMusic = StartSong.title;
   String? singer = StartSong.singer;
   String? albumCover = StartSong.imageLink;
-
+  String  titleHeadBar="Guess The Lyrics";
    AudioPlayer? player = StartSong.player1;
   
   Future<void> playMusic(String url) async {
@@ -31,7 +53,7 @@ class _SongAnsState extends State<SongAns> {
     if(playing==0){
       playing=1;
       if(start==0){await player!.play();start=1;playing=0;}
-    else{print("replay"); player=await StartSong.getAudio(StartSong.forPlayer1);await player!.play();playing=0;}}
+    else{print("replay"); PointData.replays+=1;player=await StartSong.getAudio(StartSong.forPlayer1);await player!.play();playing=0;}}
     else{print("tunggu");}
     
   }
@@ -50,6 +72,9 @@ class _SongAnsState extends State<SongAns> {
 
   @override
   Widget build(BuildContext context) {
+    if(SongSectionData.audioType=="Ielts"){
+      titleHeadBar="Guess The Subtitles";
+    }
     return Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -58,8 +83,8 @@ class _SongAnsState extends State<SongAns> {
             color: Colors.black,
           ),
           centerTitle: true,
-          title: const Text(
-            "Guess The Lyrics",
+          title: Text(
+            titleHeadBar,
             style: TextStyle(
               color: Colors.black,
               fontWeight: FontWeight.bold,
@@ -127,10 +152,15 @@ class _SongAnsState extends State<SongAns> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
+                    (SongSectionData.audioType!="Ielts")?
                     CircleAvatar(
                       radius: 20,
                       backgroundImage: NetworkImage(albumCover!),
-                    ),
+                    ):CircleAvatar(
+              radius: 25,
+              backgroundImage:  AssetImage("assets/images/ieltHome.png")
+          
+            ),
                     const Image(
                       image: AssetImage('assets/images/waveform-audio.png'),
                     ),
@@ -196,12 +226,13 @@ class _SongAnsState extends State<SongAns> {
                     foregroundColor:
                         MaterialStateProperty.all(const Color(0xffFFFFFF)),
                   ),
-                  onPressed: () {
-                    updateProgress();
+                  onPressed: () async{
+                  //  updateProgress();
                     stopMusic();
                 
                     StartSong.userLyric1=userAnswer.text;
-                    Get.off(SongAns2());
+                    showLoadingDialog(context);
+                    await StartSong.getStatus2(context);
                    // Get.toNamed('/2', arguments: _initial);
                   },
                   child: const Text("Next"),

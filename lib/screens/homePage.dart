@@ -10,6 +10,9 @@ import './songsection.dart';
 import '../controllers/songSectionData.dart';
 import '../widgets/songlevel.dart';
 import '../controllers/leaderboardData.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import '../controllers/accountData.dart';
 class HomePage extends StatefulWidget{
   HomePage({super.key});
 
@@ -18,7 +21,7 @@ class HomePage extends StatefulWidget{
 }
 
 class _HomePage extends State<HomePage>{
-
+String pageName = "HomePage";
 MediaQueryData mediaQueryData = MediaQueryData.fromWindow(ui.window);
 double progres=0.75;
 void _onItemTapped(int index) {
@@ -87,9 +90,9 @@ void _onItemTapped(int index) {
               CircularPercentIndicator(
                 radius: 80.0,
                 lineWidth: 8.0,
-                percent: progres, // Adjust the percentage as needed
+                percent: AccountData.weeklyProgresPercentage!/100, // Adjust the percentage as needed
                 center:
-                 Text("${progres*100}%",style: TextStyle(fontSize: 40,fontFamily: 
+                 Text("${AccountData.weeklyProgresPercentage!}%",style: TextStyle(fontSize: 40,fontFamily: 
                 "Poppins",fontWeight: FontWeight.w600,color: Color(0xFF527EE7)),),
 
                 progressColor: Color(0xFF527EE7),
@@ -98,7 +101,7 @@ void _onItemTapped(int index) {
               height: 10,
              ),AutoSizeText(
             textAlign:TextAlign.left,
-              "You have achived ${progres*100}% of your weekly goal",
+              "You have achived ${AccountData.weeklyProgresPercentage!}% of your weekly goal",
               style: TextStyle(fontFamily: "Poppins",fontWeight: FontWeight.bold,),
               maxLines: 2,
             ),
@@ -111,9 +114,18 @@ void _onItemTapped(int index) {
                  style: ElevatedButton.styleFrom(backgroundColor: Color(0xFF527EE7),
     minimumSize: Size(mediaQueryData.size.width*9/11 -50, 43), // Set the width and height as needed
   ),
-                onPressed: () {
+                onPressed: () async{
+                  print("proges");
                   // Add your button's action here
-                  Get.to(ProgressPage());
+                  print("awak ${AccountData.state}");
+                  if(AccountData.state==1){
+                 await AccountData.getData();
+                Get.to(()=>ProgressPage());
+               
+                
+      }else{
+        Get.to(()=>ProgressPage());
+        }
                 },
                 child: Text("See More",style: TextStyle(color: Colors.white),),
               ),
@@ -264,8 +276,10 @@ Widget ieltContainer(){
       int statcode=await SongSectionData.storeApiIelts() ;
       if(statcode==200){print("lets 3");
     Navigator.pop(context);
-    print("lets 4");
+    print("lets 4 aw");
     Level.level="Easy";
+    print("permission");
+    print(AccountData.permissionStatus);
     Get.to(()=>SongSection());}else{
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){return HomePage();}));
     }
@@ -291,7 +305,7 @@ Widget ieltContainer(){
     width:mediaQueryData.size.width*9/11 ,
     
     child: Row(
-      
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: 
     
     [

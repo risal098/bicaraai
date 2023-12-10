@@ -25,11 +25,27 @@ Widget SongCard(String imageLink, String songName, String singer,String getTitle
     );
   }
   return InkWell(
-    onTap: () async{
+    onTap:
+    
+    ()async{
+       StartSong.player1Receive=0;
+    StartSong.player2Receive=0;
+    StartSong.player3Receive=0;
+    showLoadingDialog(context);
+      String difficulty = Level.level;
+      if(SongSectionData.audioType=="Ielts"){difficulty="ielts"+difficulty;}
+         StartSong.getBlobData2(getTitle,difficulty,songName,singer,imageLink);
+         print("status 1");
+        await StartSong. getStatus1(context);
+        print("status 1 end");
+    }
+    
+   /*
+    () async{
       showLoadingDialog(context);
       String difficulty = Level.level;
       if(SongSectionData.audioType=="Ielts"){difficulty="ielts"+difficulty;}
-     int stats=0; await StartSong.getBlobData(getTitle,difficulty,songName,singer,imageLink).timeout(
+     int stats=0; int statscode=await StartSong.getBlobData(getTitle,difficulty,songName,singer,imageLink).timeout(
                                           const Duration(seconds: 29),
                       onTimeout: (){
 
@@ -38,9 +54,12 @@ Widget SongCard(String imageLink, String songName, String singer,String getTitle
           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){return SongSection();}));
         }
       else{Navigator.pop(context);
-      Get.off(SongAns());}
-      
+      Get.off(()=>SongAns());}
+      if(statscode==-1){
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){return SongSection();}));
       }
+      }
+      */////////////////////
       ,child:
   Card(
     elevation: 5,
@@ -54,9 +73,14 @@ Widget SongCard(String imageLink, String songName, String singer,String getTitle
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            (SongSectionData.audioType!="Ielts")?
             CircleAvatar(
               radius: 25,
               backgroundImage:  NetworkImage(imageLink)
+          
+            ):CircleAvatar(
+              radius: 25,
+              backgroundImage:  AssetImage("assets/images/ieltHome.png")
           
             ),
             SizedBox(

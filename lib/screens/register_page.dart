@@ -1,9 +1,12 @@
+import '../controllers/accountMessage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../bar_items/appbar.dart';
 import '../screens/login_page.dart';
 import '../screens/homePage.dart';
-
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import '../controllers/accountData.dart';
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
 
@@ -12,12 +15,13 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  String emailStatus = '';
+  String pageName = "RegisterPage";
   bool ok = true;
   bool flag = true;
-
+  String status="";
   final emailController = TextEditingController();
-  final firstnameController = TextEditingController();
-  final lastnameController = TextEditingController();
+  final usernameController = TextEditingController();
   final passwordController = TextEditingController();
 
   // void signUp() {}
@@ -73,13 +77,19 @@ class _RegisterPageState extends State<RegisterPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Image.asset("assets/images/logo_1.png"),
-                          Text(" Account")
+                          Text(" Account"),
+                          
                         ],
-                      ),
+                      ),Text(status),
                       Container(
-                        height: 70,
-                        padding: EdgeInsets.all(10),
+                        height: 60,
+                        padding: EdgeInsets.only(top: 10, right: 10, left: 10),
                         child: TextFormField(
+                          onChanged: (value) {
+                            setState(() {
+                              emailStatus = AccountMessage.emailValidator(value);
+                            });
+                          },
                           controller: emailController,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
@@ -92,16 +102,22 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                         ),
                       ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: Text(emailStatus, style: TextStyle( fontSize: 12, color: Colors.red),),
+                      ),
                       Container(
-                        height: 70,
-                        padding: EdgeInsets.all(10),
+                        height: 65,
+                        padding: EdgeInsets.only(top: 5, left: 10, right: 10, bottom: 10),
                         child: TextFormField(
-                          controller: firstnameController,
+                          maxLength: 24,
+                          controller: usernameController,
                           decoration: InputDecoration(
+                            counterText: '',
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20)),
-                            hintText: "Firstname",
-                            label: Text("Firstname"),
+                            hintText: "Username",
+                            label: Text("Username"),
                             hintStyle: TextStyle(
                               color: Colors.grey,
                             ),
@@ -112,25 +128,11 @@ class _RegisterPageState extends State<RegisterPage> {
                         height: 70,
                         padding: EdgeInsets.all(10),
                         child: TextFormField(
-                          controller: lastnameController,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20)),
-                            hintText: "Lastname",
-                            label: Text("Lastname"),
-                            hintStyle: TextStyle(
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        height: 70,
-                        padding: EdgeInsets.all(10),
-                        child: TextFormField(
+                          maxLength: 24,
                           controller: passwordController,
                           obscureText: ok,
                           decoration: InputDecoration(
+                            counterText: '',
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20)),
                             hintText: "Password",
@@ -162,9 +164,37 @@ class _RegisterPageState extends State<RegisterPage> {
                         height: 50,
                         padding: EdgeInsets.only(left: 10, right: 10),
                         child: ElevatedButton(
-                          onPressed: () {
-                            // signUp();
-                            Get.off(HomePage());
+                          onPressed: () async{
+                            if(emailStatus==''){
+                              String usernameValue=usernameController.text;
+                              String passwordValue=passwordController.text;
+                              String emailValue=emailController.text;
+                              var response= await http.post(Uri.https("bicaraai12.risalahqz.repl.co","register")
+                              ,body:jsonEncode([emailValue,usernameValue,passwordValue]));
+                              var code=response.statusCode;
+                              var data=jsonDecode(response.body);
+                              print(data);
+                              print(code);
+                              if(code==200){
+                                print(data);
+                                AccountData.email=emailValue;
+                                AccountData.userId=data[0];
+                                AccountData.username=usernameValue;
+                                response= await http.post(Uri.https("bicaraai12.risalahqz.repl.co","premium")
+                              ,body:jsonEncode([data[0],emailValue]));
+                              code=response.statusCode;
+                              data=jsonDecode(response.body);
+                              AccountData.isPrem=data[0];
+                              AccountData.permissionStatus=data[3];
+                              AccountData.deadlinePermission=data[2];
+                              await  AccountData.getData();
+                                Get.off(HomePage());}
+                              else{
+                                setState(() {
+                                  status=data[1];
+                                });
+                              }
+                            }
                           },
                           child: Text(
                             "REGISTER",

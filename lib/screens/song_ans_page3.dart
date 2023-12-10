@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import './songGrade.dart';
 import '../controllers/startSongQuiz.dart';
 import '../controllers/songPoint.dart';
+import '../controllers/songSectionData.dart';
 class SongAns3 extends StatefulWidget {
   const SongAns3({super.key});
 
@@ -12,6 +13,7 @@ class SongAns3 extends StatefulWidget {
 }
 
 class _SongAns3State extends State<SongAns3> {
+  String pageName = "SongAns3";
   double _initial = 1;
 int start=0;
   int playing=0;
@@ -23,7 +25,7 @@ int start=0;
  String? titleMusic = StartSong.title;
   String? singer = StartSong.singer;
   String? albumCover = StartSong.imageLink;
-
+ String titleHeadBar="Guess The Lyrics";
   var player = StartSong.player3;
 
   Future<void> playMusic(String url) async {
@@ -31,7 +33,7 @@ int start=0;
     if(playing==0){
       playing=1;
       if(start==0){await player!.play();start=1;playing=0;}
-    else{print("replay"); player=await StartSong.getAudio(StartSong.forPlayer3);await player!.play();playing=0;}}
+    else{print("replay");PointData.replays+=1; player=await StartSong.getAudio(StartSong.forPlayer3);await player!.play();playing=0;}}
     else{print("tunggu");}
   }
 
@@ -49,6 +51,9 @@ int start=0;
 
   @override
   Widget build(BuildContext context) {
+    if(SongSectionData.audioType=="Ielts"){
+      titleHeadBar="Guess The Subtitles";
+    }
     return Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -57,8 +62,8 @@ int start=0;
             color: Colors.black,
           ),
           centerTitle: true,
-          title: const Text(
-            "Guess The Lyrics",
+          title:  Text(
+            titleHeadBar,
             style: TextStyle(
               color: Colors.black,
               fontWeight: FontWeight.bold,
@@ -126,10 +131,15 @@ int start=0;
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
+                    (SongSectionData.audioType!="Ielts")?
                     CircleAvatar(
                       radius: 20,
                       backgroundImage: NetworkImage(albumCover!),
-                    ),
+                    ):CircleAvatar(
+              radius: 25,
+              backgroundImage:  AssetImage("assets/images/ieltHome.png")
+          
+            ),
                     const Image(
                       image: AssetImage('assets/images/waveform-audio.png'),
                     ),
@@ -196,7 +206,7 @@ int start=0;
                         MaterialStateProperty.all(const Color(0xffFFFFFF)),
                   ),
                   onPressed: () async{
-                    updateProgress();
+                  //  updateProgress();
                     stopMusic();
                     StartSong.userLyric3=userAnswer.text;
                     print(StartSong.userLyric1);

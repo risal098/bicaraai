@@ -10,7 +10,8 @@ class PointData{
   static double? answerPoint1;
   static double? answerPoint2;
   static double? answerPoint3;
-
+  static int replays=0;
+  static int points=0;
   static void makeNull(){
     PointData.percentage=null;
     PointData.overallPoint=null;
@@ -20,7 +21,7 @@ class PointData{
   }
 
   static Future<void> getPoints() async{
-    var url = Uri.https('bicaraai1.risalahqz.repl.co', 'getComparisonAnswerPoint');
+    var url = Uri.https('bicaraai12.risalahqz.repl.co', 'getComparisonAnswerPoint');
     var response = await http.post(url, body: jsonEncode
                                ([[StartSong.lyric1!
                                   ,StartSong.lyric2!
